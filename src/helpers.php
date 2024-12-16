@@ -74,7 +74,8 @@ if(!function_exists('section')){
     function section($key): ?\TomatoPHP\FilamentCms\Services\Contracts\Section
     {
         $section = \TomatoPHP\FilamentCms\Facades\FilamentCMS::themes()->getSections()->where('key', $key)->first();
-        return $section??null;
+
+        return $section ?? null;
     }
 }
 

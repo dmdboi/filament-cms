@@ -21,7 +21,15 @@ class EditPost extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
+            Actions\Action::make('editor-button')
+                ->label('Editor')
+                ->icon('heroicon-o-pencil')
+                ->action(fn() => redirect()->to('/admin/editor/' . $this->getRecord()->slug)),
+            Actions\Action::make('preview-button')
+                ->label('Preview')
+                ->icon('heroicon-o-eye')
+                ->color('primary')
+                ->action(fn() => redirect()->to('/admin/editor/' . $this->getRecord()->slug)),
             Actions\DeleteAction::make()
         ];
     }

@@ -36,11 +36,16 @@ class BuilderToolbar extends Component  implements HasForms, HasActions
             "sections" => $this->page->meta('sections')??[]
         ]);
 
+        // Load the page, if it's not already loaded
         if(session()->has('preview_' . $this->page->id)){
             $this->preview = session()->get('preview_' . $this->page->id);
-        }
-        else {
+        } else {
             session()->put('preview_' . $this->page->id, $this->preview);
+        }
+
+        // If the user is not logged in, show the preview
+        if(!auth()->user()) {
+            $this->preview = true;
         }
     }
 
@@ -70,10 +75,14 @@ class BuilderToolbar extends Component  implements HasForms, HasActions
     {
         $sections = FilamentCMS::themes()->getSections();
         $blocks = [];
+
+        // Add the sections to the form
         foreach ($sections as $section){
             $blocks[] = Builder\Block::make($section->key)
                 ->schema($section->form);
         }
+
+        // Add the form to the form
         return $form
             ->schema([
             Forms\Components\Builder::make('sections')
@@ -104,7 +113,6 @@ class BuilderToolbar extends Component  implements HasForms, HasActions
             ->success()
             ->send();
     }
-
 
     public function render(): View
     {

@@ -17,7 +17,7 @@ class Section
     public ?string $icon = null;
     public ?bool $lock = false;
 
-    public static function make(string $key):self
+    public static function make(string $key): self
     {
         return (new self())->key($key);
     }
@@ -65,11 +65,12 @@ class Section
 
     public function view(string $view): static
     {
-        if(view()->exists($view)){
-            $this->view = $view;
-        }
-        else {
-            throw new \Exception("View not found");
+        $prefix = 'themes.' . config('filament-cms.theme');
+
+        if (view()->exists($prefix . '.' . $view)) {
+            $this->view = $prefix . '.' . $view;
+        } else {
+            throw new \Exception('View not found: ' . $prefix . '.' . $view);
         }
 
         return $this;

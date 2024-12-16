@@ -38,12 +38,6 @@ return [
                         "meta_url" => "Meta URL",
                         "meta" => "Meta",
                         "meta_redirect" => "Meta Redirect",
-                        "github_starts" => "Github Stars",
-                        "github_watchers" => "Github Watchers",
-                        "github_forks" => "Github Forks",
-                        "downloads_total" => "Downloads Total",
-                        "downloads_monthly" => "Downloads Monthly",
-                        "downloads_daily" => "Downloads Daily",
                     ]
                 ],
                 "images" => [
@@ -68,7 +62,7 @@ return [
                     "description" => "Status settings",
                     "columns" => [
                         "type" => "Type",
-                        "is_published" => "Is Published",
+                        "is_published" => "Published",
                         "is_trend" => "Is Trending",
                         "published_at" => "Published At",
                         "likes" => "Likes",

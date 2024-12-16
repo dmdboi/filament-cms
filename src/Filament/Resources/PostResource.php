@@ -126,9 +126,17 @@ class PostResource extends Resource
                             ]),
                         Forms\Components\Grid::make()
                             ->schema([
-                                Forms\Components\Section::make(trans('filament-cms::messages.content.posts.sections.status.title'))
+                                Forms\Components\Section::make(trans('filament-cms::messages.content.posts.sections.meta.title'))
                                     ->description(trans('filament-cms::messages.content.posts.sections.status.description'))
                                     ->schema([
+                                        Forms\Components\Select::make('author_id')
+                                        ->label(trans('filament-cms::messages.content.posts.sections.author.columns.author'))
+                                        ->options(User::all()->pluck('name', 'id')->toArray())
+                                        ->default(
+                                            auth()->id()
+                                        )
+                                        ->selectablePlaceholder(false)
+                                        ->searchable(),
                                         Forms\Components\Select::make('categories')
                                             ->hidden(fn(Forms\Get $get) => in_array($get('type'), ['page', 'builder']))
                                             ->relationship('categories', 'name')
@@ -216,19 +224,7 @@ class PostResource extends Resource
                                             ->image()
                                             ->maxSize(2048)
                                             ->maxWidth(1920),
-                                    ]),
-                                Forms\Components\Section::make(trans('filament-cms::messages.content.posts.sections.author.title'))
-                                    ->description(trans('filament-cms::messages.content.posts.sections.author.description'))
-                                    ->schema([
-                                        Forms\Components\Select::make('author_id')
-                                            ->label(trans('filament-cms::messages.content.posts.sections.author.columns.author'))
-                                            ->options(User::all()->pluck('name', 'id')->toArray())
-                                            ->default(
-                                                auth()->id()
-                                            )
-                                            ->selectablePlaceholder(false)
-                                            ->searchable(),
-                                    ]),
+                                    ])
 
                             ])
                             ->columnSpan([
@@ -331,14 +327,6 @@ class PostResource extends Resource
                     ->description(fn(Post $post) => $post->published_at?->diffForHumans())
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('likes')
-                    ->toggleable()
-                    ->label(trans('filament-cms::messages.content.posts.sections.status.columns.likes'))
-                    ->badge()
-                    ->color('danger')
-                    ->icon('heroicon-s-heart')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('views')
                     ->toggleable()
                     ->label(trans('filament-cms::messages.content.posts.sections.status.columns.views'))
@@ -378,31 +366,18 @@ class PostResource extends Resource
                 Tables\Filters\Filter::make('author_id')
                     ->label('Author')
                     ->form([
-                        Forms\Components\Select::make('author_type')
-                            ->label('Author Type')
-                            ->options(count(FilamentCMSAuthors::getOptions()) ? FilamentCMSAuthors::getOptions()->pluck('name', 'model')->toArray() : [User::class => 'Users'])
-                            ->afterStateUpdated(fn(Forms\Get $get, Forms\Set $set) => $set('author_id', null))
-                            ->live()
-                            ->searchable(),
                         Forms\Components\Select::make('author_id')
                             ->label('Author')
-                            ->hidden(fn(Forms\Get $get) => !$get('author_type'))
-                            ->disabled(fn(Forms\Get $get) => !$get('author_type'))
-                            ->options(fn(Forms\Get $get) => $get('author_type') ? $get('author_type')::pluck('name', 'id')->toArray() : [])
+                            ->options(User::all()->pluck('name', 'id')->toArray())
                             ->searchable(),
                     ])
                     ->query(function (Builder $query, array $data) {
                         return $query
                             ->when(
-                                $data['author_type'],
-                                fn(Builder $query, $type): Builder => $query->where('author_type', $type),
-                            )
-                            ->when(
                                 $data['author_id'],
                                 fn(Builder $query, $id): Builder => $query->where('author_id', $id),
                             );
                     }),
-
                 Tables\Filters\Filter::make('published_at')
                     ->form([
                         Forms\Components\DatePicker::make('published_at')
@@ -427,19 +402,6 @@ class PostResource extends Resource
                                 fn(Builder $query, $isPublished): Builder => $query->where('is_published', (bool) $isPublished),
                             );
                     }),
-                Tables\Filters\Filter::make('is_trend')
-                    ->form([
-                        Forms\Components\Toggle::make('is_trend')
-                            ->label('Trend'),
-                    ])
-                    ->query(function (Builder $query, array $data) {
-                        return $query
-                            ->when(
-                                $data['is_trend'],
-                                fn(Builder $query, $isTrend): Builder => $query->where('is_trend', (bool) $isTrend),
-                            );
-                    }),
-
                 Tables\Filters\TrashedFilter::make()
             ])
             ->actions([
