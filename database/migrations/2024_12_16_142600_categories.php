@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,7 +12,7 @@ return new class extends Migration
      */
     public function up()
     {
-        if(config('filament-cms.features.category')){
+            // Categories
             Schema::create('categories', function (Blueprint $table) {
                 $table->id();
 
@@ -33,8 +32,21 @@ return new class extends Migration
 
                 $table->softDeletes();
             });
-        }
 
+            // Category Metas
+            Schema::create('categories_metas', function (Blueprint $table) {
+                $table->id();
+
+                $table->unsignedBigInteger('model_id')->nullable();
+                $table->string('model_type')->nullable();
+
+                $table->foreignId('category_id')->references('id')->on('categories')->onDelete('cascade');
+
+                $table->string('key')->index();
+                $table->json('value')->nullable();
+
+                $table->timestamps();
+            });
     }
 
     /**

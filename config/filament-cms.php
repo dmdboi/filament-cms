@@ -7,13 +7,9 @@ return [
      * ---------------------------------------------------
      */
     "features" => [
-        "category" => true,
-        "posts" => true,
-        "comments" => true,
-        "theme-manager" => false,
+        "comments" => false,
         "forms" => false,
         "form_requests" => false,
-        "tickets" => false,
         "apis" => false,
     ],
 
@@ -30,10 +26,8 @@ return [
      * ---------------------------------------------------
      */
     "lang" => [
-        "en" => "English",
-        "ar" => "Arabic"
+        "en" => "English"
     ],
-
 
     "themes" => [
         "scan" => true,

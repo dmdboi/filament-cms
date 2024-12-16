@@ -20,7 +20,7 @@ class CreatePost extends CreateRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\LocaleSwitcher::make()
+      
         ];
     }
 

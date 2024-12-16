@@ -14,6 +14,31 @@ return new class extends Migration
     public function up()
     {
         if(config('filament-cms.features.forms')) {
+
+            // Forms
+            Schema::create('forms', function (Blueprint $table) {
+                $table->id();
+
+                //Set Type from page/modal/slideover
+                $table->string('type')->default('page')->nullable();
+
+                //Set Name And Key
+                $table->json('title')->nullable();
+                $table->json('description')->nullable();
+                $table->string('key')->unique()->index();
+
+                //Set Form Action
+                $table->string('endpoint')->default('/')->nullable();
+                $table->string('method')->default('POST')->nullable();
+
+                //Form Control
+                $table->boolean('is_active')->default(0)->nullable();
+
+                $table->timestamps();
+                $table->softDeletes();
+            });
+
+            // Form Options
             Schema::create('form_options', function (Blueprint $table) {
                 $table->id();
 
@@ -60,6 +85,8 @@ return new class extends Migration
                 //For Meta Injection
                 $table->json('meta')->nullable();
 
+                $table->foreignId('sub_form')->nullable()->constrained('forms');
+
                 $table->timestamps();
             });
         }
@@ -72,8 +99,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::disableForeignKeyConstraints();
-        Schema::dropIfExists('form_options');
-        Schema::enableForeignKeyConstraints();
+        Schema::dropIfExists('forms');
     }
 };

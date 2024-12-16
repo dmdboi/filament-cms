@@ -10,17 +10,12 @@ use TomatoPHP\FilamentCms\Filament\Pages\Themes;
 use TomatoPHP\FilamentCms\Filament\Resources\CategoryResource;
 use TomatoPHP\FilamentCms\Filament\Resources\FormResource;
 use TomatoPHP\FilamentCms\Filament\Resources\PostResource;
-use TomatoPHP\FilamentCms\Filament\Resources\TicketResource;
 use TomatoPHP\FilamentCms\Livewire\BuilderToolbar;
-use TomatoPHP\FilamentCms\Livewire\BuilderToolbarForm;
-use TomatoPHP\FilamentCms\Livewire\BuilderToolbarHeader;
 
 
 class FilamentCMSPlugin implements Plugin
 {
     public static bool $allowUrlImport = true;
-    public static bool $allowBehanceImport = false;
-    public static bool $allowGitHubImport = true;
     public static bool $allowYoutubeImport = false;
     public static bool $allowExport = false;
     public static bool $allowImport = false;
@@ -30,8 +25,8 @@ class FilamentCMSPlugin implements Plugin
     public static bool $usePageBuilder = false;
     public static bool $useFormBuilder = false;
     public static bool $allowShield = false;
-//    public static bool $useTicketingSystem = false;
-    public static array $defaultLocales = ['ar', 'en'];
+
+    public static array $defaultLocales = ['en'];
 
     private bool $isActive = false;
 
@@ -67,12 +62,6 @@ class FilamentCMSPlugin implements Plugin
                 ]);
             }
 
-//            if(self::$useTicketingSystem){
-//                $panel->resources([
-//                    TicketResource::class
-//                ]);
-//            }
-
             if (self::$useThemeManager) {
                 $panel->pages([
                     Themes::class
@@ -105,12 +94,6 @@ class FilamentCMSPlugin implements Plugin
         self::$useFormBuilder = $useFormBuilder;
         return $this;
     }
-
-    //    public function useTicketingSystem(bool $useTicketingSystem=true): static
-    //    {
-    //        self::$useTicketingSystem = $useTicketingSystem;
-    //        return $this;
-    //    }
 
     public function defaultLocales(array $defaultLocales): static
     {
@@ -159,18 +142,6 @@ class FilamentCMSPlugin implements Plugin
     public function allowUrlImport(bool $allowUrlImport = true): static
     {
         self::$allowUrlImport = $allowUrlImport;
-        return $this;
-    }
-
-    public function allowBehanceImport(bool $allowBehanceImport = true): static
-    {
-        self::$allowBehanceImport = $allowBehanceImport;
-        return $this;
-    }
-
-    public function allowGitHubImport(bool $allowGitHubImport = true): static
-    {
-        self::$allowGitHubImport = $allowGitHubImport;
         return $this;
     }
 

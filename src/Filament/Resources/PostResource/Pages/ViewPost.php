@@ -21,8 +21,7 @@ class ViewPost extends ViewRecord
     {
         return [
             Actions\EditAction::make(),
-            Actions\DeleteAction::make()->before(fn(Post $record) => Event::dispatch(new PostDeleted($record->toArray()))),
-            Actions\LocaleSwitcher::make()
+            Actions\DeleteAction::make()->before(fn(Post $record) => Event::dispatch(new PostDeleted($record->toArray())))
         ];
     }
 }

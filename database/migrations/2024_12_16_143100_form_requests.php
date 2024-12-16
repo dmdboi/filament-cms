@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         if(config('filament-cms.features.form_requests')) {
+
+            // Form Requests
             Schema::create('form_requests', function (Blueprint $table) {
                 $table->id();
 
@@ -31,6 +33,19 @@ return new class extends Migration
                 $table->date('date')->nullable();
                 $table->time('time')->nullable();
 
+                $table->timestamps();
+            });
+
+            // Form Request Metas
+            Schema::create('form_request_metas', function (Blueprint $table) {
+                $table->id();
+
+                $table->unsignedBigInteger('model_id')->nullable();
+                $table->string('model_type')->nullable();
+
+                $table->foreignId('form_request_id')->references('id')->on('form_requests')->onDelete('cascade');
+                $table->string('key')->index();
+                $table->json('value')->nullable();
                 $table->timestamps();
             });
         }
